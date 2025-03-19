@@ -16,14 +16,40 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Load Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Update Font Awesome to the latest version -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
   <style>
+
+     /* L79 CSS customizations of bootstrap*/
+    /* Custom Font: Poppins */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Poppins', Arial, sans-serif;
       padding: 20px;
     }
+
+
+     /* L79 CSS customizations of bootstrap*/
+
+
+
+
+     
+     .banner-79 {
+                    text-align: center;
+                    padding: 10px;
+                }
+
+                .banner-79 h2 {
+                    font-weight: 900; /* Extra bold */
+                    color: #09152d;
+                    display: inline-block; /* Make the background wrap tightly around the text */
+                    background-color: yellow; /* Highlight effect */
+                    padding: 0 5px; /* Add some padding for the highlight */
+                }
+      /* L79 CSS customizations of bootstrap*/          
     .autocomplete-container {
       max-width: 100%;
     }
@@ -91,7 +117,7 @@
 
     /* Highlight the 2028 max salary cell */
     .max-salary-highlight {
-      background-color: #28a745 !important; /* High-value green */
+      background-color: #098600 !important; /* High-value green */
       color: white !important;
       font-weight: bold;
     }
@@ -116,13 +142,18 @@
     #salary-display {
       font-size: 1rem !important; /* Override Bootstrap's fs-4 class */
     }
+
+    /* Smaller Font Awesome Icon for Increases */
+    .fa-circle-arrow-up {
+      font-size: 0.8em; /* Slightly smaller size */
+    }
   </style>
 </head>
 
 <body class="container">
   <div class="row justify-content-center">
-    <div class="col-md-8 col-sm-12">
-      <h2 class="text-center mt-4">Job Title Lookup & Salary Calculation</h2>
+    <div class="banner-79 col-md-8 col-sm-12">
+      <h2 class="banner-79 text-center mt-4 ">CUPE Local 79</h2>
 
       <div class="mb-3">
         <label for="employment-type" class="form-label">Select Employment Type:</label>
@@ -138,7 +169,7 @@
         <input id="job-title" type="text" class="form-control form-control-lg" placeholder="Start typing..." data-bs-toggle="tooltip" title="Type to search for a job title" />
       </div>
 
-      <div class="mb-3" id="full-time-hours">
+      <div class="mb-3" id="full-time-hours" style="display:none;">
         <label for="hoursSelect" class="form-label">Select Hours:</label>
         <select id="hoursSelect" class="form-select form-select-lg" data-bs-toggle="tooltip" title="Select weekly hours">
           <option value="" selected disabled>-- Select Hours --</option>
@@ -153,24 +184,37 @@
         <input type="number" id="customHours" class="form-control form-control-lg" data-bs-toggle="tooltip" title="Enter custom weekly hours" />
       </div>
 
+      <div id="hoursDisplay" class="mb-3">
+        These calculations are based on the weekly paid hours: 
+        <span id="hoursValue" class="badge bg-primary fs-5 ms-2" style="display: inline-block; transition: transform 0.3s ease, background-color 0.3s ease;">--</span>
+      </div>
+
       <div class="mb-3">
-        <label for="years-of-service" class="form-label">Current Wage Step:</label>
-        <select id="years-of-service" class="form-select form-select-lg" data-bs-toggle="tooltip" title="Select your current pay step">
-          <option value="" selected disabled>-- Select your Current Pay Step (1-4) --</option>
+        <label for="years-of-service" class="form-label">Select Step:</label>
+        <select id="years-of-service" class="form-select form-select-lg" data-bs-toggle="tooltip" title="Choose your step">
+          <option value="" selected disabled>-- Select Step --</option>
           <option value="1">Step 1</option>
           <option value="2">Step 2</option>
           <option value="3">Step 3</option>
           <option value="4">Step 4</option>
         </select>
-        <small class="form-text text-muted">Your step does not change automatically with the year.</small>
       </div>
 
-      <div id="hoursDisplay" class="mb-3">These calculations are based on the weekly paid hours specified:</div>
       <div class="mt-4 text-center">
-        <button id="calculate-salary" class="btn btn-success btn-lg" data-bs-toggle="tooltip" title="Calculate your yearly salary">Calculate  <i class="fa fa-calculator" aria-hidden="true"></i></button>
-        <button id="reset-form" class="btn btn-secondary btn-lg" data-bs-toggle="tooltip" title="Click to reset the form">Reset <i class="fa fa-refresh" aria-hidden="true"></i></button>
-        <button id="toggle-increases" class="btn btn-info btn-lg" data-bs-toggle="tooltip" title="Click to toggle yearly increases">Show Yearly Increases</button>
-        <div id="salary-display" class="mt-3"></div>
+
+        <div class="" role="group">
+        <button type="button" id="calculate-salary" class="btn btn-success btn-lg" data-bs-toggle="tooltip" title="Calculate your yearly salary">Calculate  <i class="fa fa-calculator" aria-hidden="true"></i></button>
+        
+        <button type="button" id="reset-form" class="btn btn-secondary btn-lg" data-bs-toggle="tooltip" title="Click to reset the form">Reset <i class="fa fa-refresh" aria-hidden="true"></i></button>
+        </div>
+        
+      </div>
+        </div>
+        
+        </div>
+      </div>
+        <div id="salary-display" class="mt-3" aria-live="polite"></div>
+      
       </div>
     </div>
   </div>
@@ -185,12 +229,79 @@
                 <th class="text-center">Step 2</th>
                 <th class="text-center">Step 3</th>
                 <th class="text-center">Step 4</th>
-                <th>Annual Salary</th>
+                <th>Annual Earnings <i class="fa-solid fa-sack-dollar"></i></th>
             </tr>
         </thead>
         <tbody>
         </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="6" class="text-end">
+              <button id="toggle-weekly-earnings" class="btn btn-dark btn-sm" data-bs-toggle="tooltip" title="Toggle Yearly/Weekly Earnings">
+                <i class="fa-solid fa-calendar"></i> Toggle Weekly
+              </button>
+
+              <script>
+                $(document).ready(function () {
+                  let isWeekly = false;
+
+                    $("#toggle-weekly-earnings").on("click", function () {
+                    const table = $("#wage-table-container table");
+                    const header = table.find("thead th:last-child");
+                    const rows = table.find("tbody tr");
+
+                    if (!isWeekly) {
+                      // Change header text to Weekly Earnings (retain icon and formatting)
+                      header.html('Weekly Earnings <i class="fa-solid fa-sack-dollar"></i>');
+
+                      // Update each row's last column to show weekly earnings
+                      rows.each(function () {
+                      const annualCell = $(this).find("td:last-child");
+                      const annualValue = parseFloat(annualCell.text().replace(/[^0-9,.-]+/g, "").replace(/,/g, ""));
+                      if (!isNaN(annualValue)) {
+                        const weeklyValue = (annualValue / 52).toFixed(2);
+                        annualCell.html(formatCurrency(parseFloat(weeklyValue)));
+                      }
+                      });
+
+                      $(this).html('<i class="fa-solid fa-calendar"></i> Toggle Annual');
+                    } else {
+                      // Change header text back to Annual Earnings (retain icon and formatting)
+                      header.html('Annual Earnings <i class="fa-solid fa-sack-dollar"></i>');
+
+                      // Update each row's last column to show annual earnings
+                      rows.each(function () {
+                      const weeklyCell = $(this).find("td:last-child");
+                      const weeklyValue = parseFloat(weeklyCell.text().replace(/[^0-9,.-]+/g, "").replace(/,/g, ""));
+                      if (!isNaN(weeklyValue)) {
+                        const annualValue = (weeklyValue * 52).toFixed(2);
+                        weeklyCell.html(formatCurrency(parseFloat(annualValue)));
+                      }
+                      });
+
+                      $(this).html('<i class="fa-solid fa-calendar"></i> Toggle Weekly');
+                    }
+
+                    isWeekly = !isWeekly;
+                    });
+
+                  function formatCurrency(num) {
+                    return `$${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                  }
+                });
+              </script>
+            </td>
+          </tr>
+        </tfoot>
       </table>
+      <div class="mt-3 text-center"></div>
+        <button id="toggle-increases" class="btn btn-info btn-md" data-bs-toggle="tooltip" title="Click to show or hide yearly dollar increases">
+          Show <i class="fa-solid fa-dollar-sign"></i> Increases
+        </button>
+        <button id="toggle-percentage-increases" class="btn btn-warning btn-md" data-bs-toggle="tooltip" title="Click to show or hide percentage increases">
+          Show <i class="fa-solid fa-percent"></i> Increases
+        </button>
+      </div>
     </div>
   </div>
 
@@ -327,21 +438,44 @@
       $.getJSON("2024BaseWages.json", function (data) {
         jobWages = data;
 
-        // Initialize autocomplete with job titles
-        const jobTitles = jobWages.map(job => job["JOB TITLE"]).filter(title => title); // Ensure no undefined titles
+        // Identify job titles with multiple hour values
+        const jobTitleHoursMap = {};
+        jobWages.forEach(job => {
+          const title = job["JOB TITLE"];
+          const hours = job["Hours"];
+          if (title) {
+            if (!jobTitleHoursMap[title]) {
+              jobTitleHoursMap[title] = new Set();
+            }
+            jobTitleHoursMap[title].add(hours);
+          }
+        });
+
+        // Prepare autocomplete data
+        const jobTitlesWithHours = jobWages
+          .filter(job => job["JOB TITLE"]) // Ensure no undefined titles
+          .map(job => {
+            const title = job["JOB TITLE"];
+            const hours = job["Hours"];
+            const hasMultipleHours = jobTitleHoursMap[title].size > 1;
+            return {
+              label: hasMultipleHours ? `${title} (${hours || "N/A"} hours)` : title,
+              value: title,
+              hours: hours
+            };
+          });
+
         $("#job-title").autocomplete({
-          source: jobTitles,
+          source: jobTitlesWithHours,
           minLength: 1,
           delay: 0,
           select: function (event, ui) {
             const selectedJob = ui.item.value;
-            const matchingJob = jobWages.find(job => job["JOB TITLE"] === selectedJob);
-            if (matchingJob) {
-              const hours = matchingJob["Hours"];
-              if ($("#employment-type").val() === "full-time" && hours) {
-                $("#hoursSelect").val(hours).trigger("change");
-                console.log(`Selected Hours: ${hours}`);
-              }
+            const selectedHours = ui.item.hours;
+            if ($("#employment-type").val() === "full-time" && selectedHours) {
+              $("#hoursSelect").val(selectedHours).trigger("change");
+              console.log(`Selected Hours: ${selectedHours}`);
+              $("#hoursDisplay .HoursShow").text(selectedHours);
             }
           }
         });
@@ -381,35 +515,39 @@
 
       function calculateWageForYear(baseWage, wageGrade, year, step, jobTitle) {
         let wage = baseWage;
-
+      
         if (year === 2025) {
           // Apply Grid Move
           const { wageGrade: newWageGrade, wage: newWage } = applyGridMove(jobTitle, wageGrade, step);
           wageGrade = newWageGrade;
           if (newWage !== null) wage = newWage;
-
+      
           // Apply Market Adjustment
           wage = applyMarketAdjustment(jobTitle, wage, step);
-
+      
           // Apply General Adjustment
-          if (wageGrade <= 8) {
-            wage += 1.65; // Updated to $1.65 for wage grades 1-8
-          } else if (wageGrade === 9) {
-            wage += 1.60; // $1.60 for wage grade 9
-          } else {
+            if (wageGrade <= 8) {
+            wage += 1.65; // $1.65 for wage grades 1-8
+            }  if (wageGrade === 9) {
+              wage += 1.60; // $1.60 for other wage grade 9 jobs
+            } 
+             else {
             wage *= 1.0395; // 3.95% for wage grades above 9
-          }
+            }} else if (year === 2026 && jobTitle === "REGISTERED NURSE LTC") {
+          console.log("+1 dollar"); // Log the $1 adjustment
+          wage += 1; // Apply $1/hour adjustment
+          wage *= 1.039; // Apply percentage increase after adjustment
         } else if (year === 2026) {
           wage *= 1.039;
         } else if (year === 2027) {
           wage *= 1.038;
         } else if (year === 2028) {
-          wage *= 1.03; // Updated to 3% for 2028
+          wage *= 1.03; // 3% for 2028
         }
-
+      
         return wage;
       }
-
+      
       function updateWageTable(jobTitle, step, hours) {
         const jobData = jobWages.find(job => job["JOB TITLE"] === jobTitle);
         if (!jobData) return;
@@ -438,16 +576,13 @@
           for (let i = 1; i <= 4; i++) {
             let wageText = wagesByStep[i] ? formatCurrency(wagesByStep[i]) : "-";
             if (i === step && year === currentYear) {
-              // Highlight the current step for 2024
-              row += `<td>${wageText} <span class="you-are-here">Current<i class=""></i></span></td>`;
+              row += `<td>${wageText} <span class="you-are-here">Current</span></td>`;
             } else if (i === step && year === "2025") {
-              // Highlight the "New" step for 2025
-              row += `<td style="font-weight: bold; position: relative;">
+              row += `<td class="new-highlight" style="font-weight: bold; position: relative;">
                 ${wageText}
                 <span style="display: block; color: green; font-size: 0.9em;">New</span>
               </td>`;
             } else if (i === currentStep && yearIndex > 1) {
-              // Highlight the progression step for 2026 and beyond
               row += `<td class="diagonal-highlight">${wageText}</td>`;
             } else {
               row += `<td>${wageText}</td>`;
@@ -457,8 +592,17 @@
           // Corrected annual salary calculation with hourly wage rounding for each year
           let hourlyRate = wagesByStep[currentStep];
           hourlyRate = Math.round(hourlyRate * 100) / 100; // Round hourly rate to 2 decimal places
+      
+          // Add $1 adjustment for REGISTERED NURSE LTC in 2026 and beyond
+          let adjustmentText = "";
+          if (jobTitle === "REGISTERED NURSE LTC" && parseInt(year) >= 2026) {
+            adjustmentText = `<span style="color: blue; font-size: 0.9em;">
+              <i class="fa-solid fa-circle-arrow-up"></i> +$1
+            </span>`;
+          }
+      
           let annualSalary = Math.round((hourlyRate * hours * 52) * 100) / 100; // Calculate and round annual salary to 2 decimal places
-          row += `<td>${annualSalary ? formatCurrency(annualSalary) : "-"}</td></tr>`;
+          row += `<td>${annualSalary ? formatCurrency(annualSalary) : "-"} ${adjustmentText}</td></tr>`;
           tableBody.append(row);
       
           // Update wages for the next year for all steps
@@ -467,6 +611,11 @@
             wagesByStep[i] = Math.round(wagesByStep[i] * 100) / 100; // Ensure hourly rate is rounded for the next year
           }
         });
+      
+        // Highlight the bottom-right cell (2028 max salary)
+        const lastRow = tableBody.find("tr:last-child");
+        const lastCell = lastRow.find("td:last-child");
+        lastCell.addClass("max-salary-highlight");
       
         $("#wage-table-container").show();
         showYearlyIncreases();
@@ -478,67 +627,98 @@
         if (employmentType === "full-time") {
           $("#full-time-hours").removeClass("hidden");
           $("#part-time-hours").addClass("hidden");
+          $("#hoursValue").text("--").removeClass("bg-success bg-danger").addClass("bg-primary");
         } else if (employmentType === "part-time") {
           $("#full-time-hours").addClass("hidden");
           $("#part-time-hours").removeClass("hidden");
+          const customHours = $("#customHours").val();
+          $("#hoursValue").text(customHours || "--").removeClass("bg-success bg-danger").addClass("bg-primary");
         }
       });
 
+      $('#customhours').on('input', function() {
+        $('.part-time').text($(this).val());
+      });
       $("#calculate-salary").on("click", function () {
         const selectedJob = $("#job-title").val();
-        const selectedYears = parseInt($("#years-of-service").val());
+        const selectedStep = parseInt($("#years-of-service").val());
         const employmentType = $("#employment-type").val();
         let hours = 0;
-
+      
         if (employmentType === "full-time") {
           hours = parseFloat($("#hoursSelect").val());
         } else if (employmentType === "part-time") {
           hours = parseFloat($("#customHours").val());
         }
-
-        if (!selectedJob || isNaN(selectedYears) || !employmentType || isNaN(hours) || hours <= 0) {
-          $("#salary-display").text("Please select a valid employment type, job, years of service, and hours.");
+      
+        // Reset validation classes
+        $("#job-title, #years-of-service, #employment-type, #hoursSelect, #customHours").removeClass("is-invalid");
+      
+        let isValid = true;
+      
+        // Validate Employment Type
+        if (!employmentType) {
+          $("#employment-type").addClass("is-invalid");
+          isValid = false;
+        }
+      
+        // Validate Job Title
+        if (!selectedJob) {
+          $("#job-title").addClass("is-invalid");
+          isValid = false;
+        }
+      
+        // Validate Step
+        if (isNaN(selectedStep)) {
+          $("#years-of-service").addClass("is-invalid");
+          isValid = false;
+        }
+      
+        // Validate Hours
+        if (isNaN(hours) || hours <= 0) {
+          if (employmentType === "full-time") {
+            $("#hoursSelect").addClass("is-invalid");
+          } else if (employmentType === "part-time") {
+            $("#customHours").addClass("is-invalid");
+          }
+          isValid = false;
+        }
+      
+        // If any validation fails, stop further execution
+        if (!isValid) {
+          $("#salary-display").html("<span class='text-danger'>Please fill out all required fields correctly.</span>");
           return;
         }
-
-        // Ensure the table is updated with the correct data
-        updateWageTable(selectedJob, selectedYears, hours);
-
-        // Highlight progression based on the selected step
-        highlightProgression(selectedYears);
-
-        // Highlight the 2028 max salary
-        highlight2028MaxSalary();
-
-        // Enable Bootstrap tooltips
-        $('[data-bs-toggle="tooltip"]').tooltip();
-
+      
+        // Proceed with salary calculation if all inputs are valid
+        updateWageTable(selectedJob, selectedStep, hours);
+      
         // Display the calculated salary for the selected step and hours
         const jobData = jobWages.find(job => job["JOB TITLE"] === selectedJob);
-        if (jobData && jobData[selectedYears]) {
-            const annualSalary = parseFloat(jobData[selectedYears].replace("$", "")) * hours * 52;
-            $("#salary-display").text(`Current salary:<strong> ${formatCurrency(annualSalary)}</strong> at step ${selectedYears}`);
-            
-            const jobData2025 = calculateWageForYear(
-            parseFloat(jobData[selectedYears].replace("$", "")),
-            jobData["Wage Grade"],
-            2025,
-            selectedYears,
-            selectedJob
-            ) * hours * 52; // Include hours in the calculation for 2025 annual salary
-
-            const increaseAmount = jobData2025 - annualSalary;
-            const increasePercent = (increaseAmount / annualSalary) * 100;
-
-            $("#salary-display").html(`
-            <p>Current earnings are: <strong>${formatCurrency(annualSalary)}</strong> at step ${selectedYears}.<br>
-            New Salary: <strong>${formatCurrency(jobData2025)}</strong>.<br>
-            This is an increase of <strong>${formatCurrency(increaseAmount)}</strong> (${increasePercent.toFixed(2)}%).
-            </p>`);
-          } else {
-            $("#salary-display").text("Unable to calculate salary. Please check your inputs.");
-          }
-          });
+        if (jobData && jobData[selectedStep]) {
+          const hourlyRate = parseFloat(jobData[selectedStep].replace("$", ""));
+          const annualSalary = Math.round(hourlyRate * hours * 52 * 100) / 100; // Round to 2 decimal places
+          const nextYearHourlyRate = calculateWageForYear(hourlyRate, jobData["Wage Grade"], 2025, selectedStep, selectedJob);
+          const nextYearAnnualSalary = Math.round(nextYearHourlyRate * hours * 52 * 100) / 100; // Calculate next year's annual salary
+          const percentageIncrease = ((nextYearHourlyRate - hourlyRate) / hourlyRate * 100).toFixed(2);
+          const annualIncrease = Math.round((nextYearAnnualSalary - annualSalary) * 100) / 100; // Calculate annual increase
+          $("#salary-display").html(`
+            Current salary: <strong>${formatCurrency(annualSalary)}</strong> 
+            at Step <strong>${selectedStep}</strong> 
+            with an hourly rate of <strong>${formatCurrency(hourlyRate)}</strong>.<br>
+            In 2025, your hourly rate will increase by <strong>${percentageIncrease}%</strong>.<br>
+            You will make <strong>${formatCurrency(annualIncrease)}</strong> more in 2025.
+          `);
+        } else {
+          $("#salary-display").html("<span class='text-danger'>Unable to calculate salary. Please check your inputs.</span>");
+        }
+      
+        // Scroll to the wage table
+        $("html, body").animate({
+          scrollTop: $("#wage-table-container").offset().top
+        }, 800);
+      });
+      
 
       $("#reset-form").on("click", function () {
         // Reset form fields
@@ -553,6 +733,11 @@
         $("#wage-table-container").hide();
         $("#wage-table-container tbody").empty();
 
+        // Scroll back to the top of the page
+        $("html, body").animate({
+          scrollTop: 0
+        }, 800);
+
         // Reset tooltips
         $('[data-bs-toggle="tooltip"]').tooltip("hide");
       });
@@ -565,7 +750,19 @@
           increase.style.display = isHidden ? "inline" : "none";
         });
 
-        const buttonText = isHidden ? "Hide Yearly Increases" : "Show Yearly Increases";
+        const buttonText = isHidden ? "Hide $" : "Show $";
+        $(this).text(buttonText);
+            });
+
+            $("#toggle-percentage-increases").on("click", function () {
+        const percentageIncreases = document.querySelectorAll(".percentage-increase-text");
+        const isHidden = percentageIncreases[0]?.style.display === "none";
+
+        percentageIncreases.forEach(increase => {
+          increase.style.display = isHidden ? "inline" : "none";
+        });
+
+        const buttonText = isHidden ? "Hide %" : "Show %";
         $(this).text(buttonText);
       });
 
@@ -579,43 +776,73 @@
     function showYearlyIncreases() {
       const table = document.querySelector("#wage-table-container table");
       if (!table) {
-        console.error("Wage table not found.");
-        return;
+      console.error("Wage table not found.");
+      return;
       }
     
       const rows = table.querySelectorAll("tbody tr");
       rows.forEach((row, rowIndex) => {
-        if (rowIndex === 0) return; // Skip the first row (2024 base year)
+      if (rowIndex === 0) return; // Skip the first row (2024 base year)
     
-        const prevRow = rows[rowIndex - 1];
-        const cells = row.querySelectorAll("td");
-        const prevCells = prevRow.querySelectorAll("td");
+      const prevRow = rows[rowIndex - 1];
+      const cells = row.querySelectorAll("td");
+      const prevCells = prevRow.querySelectorAll("td");
     
-        cells.forEach((cell, cellIndex) => {
-          if (cellIndex === 0) return; // Skip the "Year" column
+      cells.forEach((cell, cellIndex) => {
+        if (cellIndex === 0) return; // Skip the "Year" column
     
-          const currentValue = parseFloat(cell.textContent.replace(/[^0-9.-]+/g, ""));
-          const prevValue = parseFloat(prevCells[cellIndex].textContent.replace(/[^0-9.-]+/g, ""));
+        const currentValue = parseFloat(cell.textContent.replace(/[^0-9.-]+/g, ""));
+        const prevValue = parseFloat(prevCells[cellIndex].textContent.replace(/[^0-9.-]+/g, ""));
     
-          if (!isNaN(currentValue) && !isNaN(prevValue)) {
-            const increase = currentValue - prevValue;
-            const increaseText = ` (+${increase.toFixed(2)})`;
+        if (!isNaN(currentValue) && !isNaN(prevValue)) {
+        const increase = currentValue - prevValue;
+        const percentageIncrease = ((increase / prevValue) * 100).toFixed(2);
     
-            let increaseSpan = cell.querySelector(".increase-text");
-            if (!increaseSpan) {
-              increaseSpan = document.createElement("span");
-              increaseSpan.className = "increase-text";
-              increaseSpan.style.color = "green";
-              increaseSpan.style.fontSize = "0.9em";
-              increaseSpan.style.display = "none";
-              cell.appendChild(increaseSpan);
-            }
+        // Add dollar increase text
+        let increaseSpan = cell.querySelector(".increase-text");
+        if (!increaseSpan) {
+          increaseSpan = document.createElement("span");
+          increaseSpan.className = "increase-text";
+          increaseSpan.style.color = "green";
+          increaseSpan.style.fontSize = "0.9em";
+          increaseSpan.style.display = "none";
+          cell.appendChild(increaseSpan);
+        }
+        increaseSpan.innerHTML = ` <i class="fa-solid fa-circle-arrow-up"></i> ${increase.toFixed(2)}`;
     
-            increaseSpan.textContent = increaseText;
-          }
-        });
+        // Add percentage increase text
+        let percentageSpan = cell.querySelector(".percentage-increase-text");
+        if (!percentageSpan) {
+          percentageSpan = document.createElement("span");
+          percentageSpan.className = "percentage-increase-text";
+          percentageSpan.style.color = "orange";
+          percentageSpan.style.fontSize = "0.9em";
+          percentageSpan.style.display = "none";
+          cell.appendChild(percentageSpan);
+        }
+        percentageSpan.innerHTML = ` <i class="fa-solid fa-circle-arrow-up"></i> ${percentageIncrease}%`;
+        }
       });
+      });
+
+      // Ensure the bottom-right cell's increase text is visible against the green background
+      const lastRow = table.querySelector("tbody tr:last-child");
+      if (lastRow) {
+      const lastCell = lastRow.querySelector("td:last-child");
+      if (lastCell) {
+        const increaseSpan = lastCell.querySelector(".increase-text");
+        const percentageSpan = lastCell.querySelector(".percentage-increase-text");
+        if (increaseSpan) {
+        increaseSpan.style.color = "white"; // Set text color to white
+        }
+        if (percentageSpan) {
+        percentageSpan.style.color = "white"; // Set text color to white
+        }
+      }
+      }
     }
+   
+
     
 
     function highlightProgression(selectedStep) {
@@ -720,6 +947,41 @@
       // Observe changes in the body element
       observer.observe(document.body, { childList: true, subtree: true });
     });
+
+    // Update hours display dynamically
+    $("#employment-type").on("change", function () {
+      const employmentType = $(this).val();
+      if (employmentType === "full-time") {
+        $("#full-time-hours").removeClass("hidden");
+        $("#part-time-hours").addClass("hidden");
+        $("#hoursValue").text("--").removeClass("bg-success bg-danger").addClass("bg-primary");
+      } else if (employmentType === "part-time") {
+        $("#full-time-hours").addClass("hidden");
+        $("#part-time-hours").removeClass("hidden");
+        const customHours = $("#customHours").val();
+        $("#hoursValue").text(customHours || "--").removeClass("bg-success bg-danger").addClass("bg-primary");
+      }
+    });
+
+    $("#hoursSelect").on("change", function () {
+      const selectedHours = $(this).val();
+      $("#hoursValue").text(selectedHours).removeClass("bg-primary bg-danger").addClass("bg-success");
+      animateHoursValue();
+    });
+
+    $("#customHours").on("input", function () {
+      const customHours = $(this).val();
+      $("#hoursValue").text(customHours || "--").removeClass("bg-primary bg-success").addClass("bg-danger");
+      animateHoursValue();
+    });
+
+    function animateHoursValue() {
+      const hoursValue = $("#hoursValue");
+      hoursValue.css("transform", "scale(1.2)");
+      setTimeout(() => {
+        hoursValue.css("transform", "scale(1)");
+      }, 300);
+    }
   </script>
 
   <style>
